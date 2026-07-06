@@ -677,15 +677,15 @@ function renderMonthNutri(weeks){
     </div>`;
 }
 function renderMonthShop(weeks){
-  const map={}; // name -> {store, count}
+  const map={}; // name -> {store, count, amts}
   weeks.flat().forEach(idx=>{
     R[idx].ing.forEach(i=>{
-      const name=i[0].replace(/\s?\d+.*$/,'').trim()||i[0];
-      if(!map[name]) map[name]={store:i[1], count:0};
-      map[name].count++;
+      const name=baseName(i[0]);
+      if(!map[name]) map[name]={store:i[1], count:0, amts:[]};
+      map[name].count++; map[name].amts.push(amtOf(i[0]));
     });
   });
-  const items=Object.entries(map).map(([name,v])=>({name, store:v.store, count:v.count}))
+  const items=Object.entries(map).map(([name,v])=>({name, store:v.store, count:v.count, amts:v.amts}))
     .sort((a,b)=>b.count-a.count);
   renderShop(document.getElementById('monthShop'), items, "한 달 예상 장보기 비용");
 }
@@ -712,12 +712,28 @@ function matchPrice(name){
   return best;
 }
 /* ---------- 공용 장보기 리스트 (전체 목록 ↔ 마트별 추천 토글) ---------- */
+function baseName(raw){ return raw.replace(/\s?\d+.*$/,'').trim()||raw; }
+function amtOf(raw){ const b=raw.replace(/\s?\d+.*$/,'').trim(); return (b && raw.length>b.length)? raw.slice(b.length).trim() : ''; }
+function sumAmounts(list){
+  const units={}, others=[];
+  (list||[]).forEach(a=>{
+    if(!a) return;
+    const m=a.match(/^(\d+(?:[.\/]\d+)?)\s*([a-zA-Z가-힣]+)?$/);
+    if(m){ const n=m[1].includes('/')? (parseFloat(m[1].split('/')[0])/parseFloat(m[1].split('/')[1])) : parseFloat(m[1]);
+      const u=(m[2]||'').trim(); units[u]=(units[u]||0)+n; }
+    else others.push(a);
+  });
+  const parts=Object.entries(units).map(([u,v])=>{ const n=Number.isInteger(v)? v : Math.round(v*10)/10; return n+u; });
+  return parts.concat([...new Set(others)]).join(' + ');
+}
 function shopItemLi(it, showStore){
   const m=matchPrice(it.name);
   const cnt = it.count? ` <span style="color:var(--muted);font-size:.72rem">×${it.count}끼</span>`:'';
+  const total = sumAmounts(it.amts);
+  const amt = total? ` <span style="color:var(--accent-2);font-size:.72rem">필요량 ${esc(total)}</span>`:'';
   const store = showStore? ` <span style="color:var(--muted);font-size:.72rem">(${STORE_NAMES[it.store]})</span>`:'';
   const price = m? ` <b style="color:#b5613a">${wonFmt(m.price)}</b>` : ` <span style="color:var(--muted);font-size:.72rem">가격 미등록</span>`;
-  return `<li>${esc(it.name)}${cnt}${price}${store}</li>`;
+  return `<li>${esc(it.name)}${cnt}${amt}${price}${store}</li>`;
 }
 function shopCostBox(items, label){
   let grand=0, matched=0;
@@ -753,13 +769,15 @@ function renderShop(container, items, label){
 }
 document.getElementById('planRun').onclick=()=>{
   const sels=[...document.querySelectorAll('#planGrid select')];
-  const seen={}; const items=[]; let any=false;
+  const map={}; let any=false;
   sels.forEach(s=>{ if(s.value!==''){ any=true;
     R[+s.value].ing.forEach(i=>{
-      const name=i[0].replace(/\s?\d+.*$/,'').trim()||i[0];
-      if(!(name in seen)){ seen[name]=1; items.push({name, store:i[1]}); }
+      const name=baseName(i[0]);
+      if(!map[name]) map[name]={store:i[1], count:0, amts:[]};
+      map[name].count++; map[name].amts.push(amtOf(i[0]));
     });
   }});
+  const items=Object.entries(map).map(([name,v])=>({name, store:v.store, count:v.count, amts:v.amts}));
   const out=document.getElementById('shopOut');
   if(!any){out.innerHTML='<p style="color:var(--muted)">메뉴를 하나 이상 선택해주세요.</p>';return;}
   renderShop(out, items, "예상 장보기 비용");
