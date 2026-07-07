@@ -181,6 +181,11 @@ class Handler(BaseHTTPRequestHandler):
             self._send(200, b'{"ok": true}', "application/json; charset=utf-8")
             return
 
+        if parsed.path == "/ads.txt":
+            self._send(200, b"google.com, pub-2685692811563574, DIRECT, f08c47fec0942fa0\n",
+                       "text/plain; charset=utf-8")
+            return
+
         if parsed.path == "/api/scrape":
             qs = urllib.parse.parse_qs(parsed.query)
             store = (qs.get("store", [""])[0]).strip()
