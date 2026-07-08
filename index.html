@@ -43,6 +43,11 @@
   .card ul{margin:0;padding-left:18px;font-size:.9rem}
   .card ol{margin:0;padding-left:20px;font-size:.9rem}
   .ing-store{font-size:.72rem;color:#fff;padding:1px 6px;border-radius:6px;margin-left:4px;vertical-align:middle}
+  .ing-chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+  .ing-chip{border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 13px;border-radius:999px;
+    font-size:.84rem;cursor:pointer;transition:.12s;font-weight:600}
+  .ing-chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .miss{font-size:.72rem;color:#d24343;background:#fdeaea;padding:2px 8px;border-radius:999px;margin-left:4px;font-weight:600}
   .store-card{background:var(--card);border-radius:16px;padding:0;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden;margin-bottom:16px}
   .store-head{padding:14px 16px;color:#fff;display:flex;justify-content:space-between;align-items:center}
   .store-head h3{margin:0;font-size:1.1rem}
@@ -104,6 +109,7 @@
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="recipes">🍽 레시피 아이디어</button>
+    <button class="tab" data-tab="pantry">🧺 냉장고 파먹기</button>
     <button class="tab" data-tab="plan">🗓️ 주간 식단</button>
     <button class="tab" data-tab="month">📅 월간 식단</button>
     <button class="tab" data-tab="trend">🔥 레시피 트렌드</button>
@@ -151,6 +157,23 @@
       <button class="chip-btn" id="toggleStore" style="margin-left:auto">🏬 매장 표시하기</button>
     </div>
     <div class="grid" id="recipeGrid"></div>
+  </section>
+
+  <!-- PANTRY (냉장고 파먹기) -->
+  <section id="pantry">
+    <div class="plan-box">
+      <h3 style="margin-top:0">🧺 냉장고에 있는 재료로 만들기</h3>
+      <p style="color:var(--muted);font-size:.86rem;margin-top:4px">지금 <b>가지고 있는 재료</b>를 눌러서 선택하면, 그 재료로 만들 수 있는 메뉴를 골라줘요. <span style="color:var(--accent-2)">물·밥·육수·기름·전분</span> 같은 기본 재료는 항상 있다고 가정해요.</p>
+      <div class="ing-chips" id="pantryChips"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px">
+        <button class="btn" id="pantryFind">🍳 만들 수 있는 메뉴 보기</button>
+        <button class="btn sec" id="pantryPlan">🗓️ 이 재료로 주간 식단 짜기</button>
+        <button class="btn" id="pantryClear" style="background:#eee;color:#7a6d65">선택 초기화</button>
+      </div>
+      <div id="pantryResult" style="margin-top:12px"></div>
+      <div id="pantryDetail" style="margin-top:12px"></div>
+    </div>
+    <div class="note">💡 재료 이름이 <b>1개만 더</b> 필요한 메뉴도 함께 보여줘요. 장 보러 갈 때 딱 하나만 더 사면 되는 메뉴예요.</div>
   </section>
 
   <!-- STORES -->
@@ -493,6 +516,107 @@ document.getElementById('toggleStore').onclick=()=>{
   renderRecipes();
 };
 renderRecipes();
+
+/* ---------- 냉장고 파먹기 (가진 재료로 메뉴/식단 추천) ---------- */
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('section').forEach(x=>x.classList.remove('active'));
+  const t=document.querySelector(`.tab[data-tab="${name}"]`); if(t)t.classList.add('active');
+  const s=document.getElementById(name); if(s)s.classList.add('active');
+}
+function pIsStaple(raw){ return /물|육수|식용유|올리브유|전분|소금|참기름|진밥|무른밥|밥|쌀|분유|모유|간장/.test(raw); }
+const P_SYN={"생연어":"연어","새우살":"새우","생새우":"새우","닭안심":"닭고기","닭가슴살":"닭고기",
+  "대구살":"흰살생선","아기치즈":"치즈","체다":"치즈","플레인":"요거트"};
+const P_QUAL=/(삶은|데친|데쳐|불린|익힌|볶은|다짐육|다진|손질|무염|약간|소량|적당량|조금|반)\s*/g;
+function pKeys(raw){
+  let s=String(raw).replace(/\([^)]*\)/g,' ').replace(/[·,]|\s+or\s+|\//g,'|');
+  return s.split('|').map(part=>{
+    let t=part.replace(/\s?\d.*$/,'').replace(P_QUAL,'').trim().split(/\s+/)[0]||'';
+    return P_SYN[t]||t;
+  }).filter(Boolean);
+}
+const PANTRY_SEL=new Set();
+function pantryIngredientList(){
+  const set=new Set();
+  R.forEach(r=>r.ing.forEach(i=>{ if(pIsStaple(i[0]))return; pKeys(i[0]).forEach(k=>set.add(k)); }));
+  return [...set].sort((a,b)=>a.localeCompare(b,'ko'));
+}
+function renderPantryChips(){
+  const el=document.getElementById('pantryChips');
+  el.innerHTML=pantryIngredientList().map(n=>
+    `<button class="ing-chip${PANTRY_SEL.has(n)?' on':''}" data-ing="${esc(n)}">${esc(n)}</button>`).join('');
+  el.querySelectorAll('.ing-chip').forEach(b=>b.onclick=()=>{
+    const n=b.dataset.ing;
+    if(PANTRY_SEL.has(n))PANTRY_SEL.delete(n); else PANTRY_SEL.add(n);
+    b.classList.toggle('on');
+  });
+}
+function pantryMatch(){
+  return R.map((r,idx)=>{
+    const miss=new Set();
+    r.ing.forEach(i=>{ if(pIsStaple(i[0]))return; pKeys(i[0]).forEach(k=>{ if(!PANTRY_SEL.has(k))miss.add(k); }); });
+    return {idx, miss:[...miss]};
+  });
+}
+function pantryCard(x){
+  const r=R[x.idx];
+  const badge=x.miss.length? ` <span class="miss">＋${esc(x.miss.join(', '))}</span>`:'';
+  return `<div class="card"><h3>${DIFF_ICON[r.diff]} ${esc(r.t)}${badge}</h3>${recipeMetaHTML(r)}
+    <button class="chip-btn pantry-detail" data-i="${x.idx}" style="margin-top:6px;font-size:.75rem;padding:4px 10px">📖 재료·조리법</button></div>`;
+}
+function renderPantryResult(){
+  const out=document.getElementById('pantryResult');
+  document.getElementById('pantryDetail').innerHTML='';
+  if(!PANTRY_SEL.size){ out.innerHTML='<p style="color:var(--muted)">위에서 지금 가지고 있는 재료를 눌러 선택한 뒤 버튼을 눌러주세요.</p>'; return; }
+  const m=pantryMatch();
+  const make=m.filter(x=>x.miss.length===0);
+  const almost=m.filter(x=>x.miss.length===1).sort((a,b)=>a.miss[0].localeCompare(b.miss[0],'ko'));
+  let html='';
+  html+=`<h4 style="margin:4px 0 8px;color:var(--accent-2)">✅ 지금 바로 만들 수 있는 메뉴 (${make.length})</h4>`;
+  html+= make.length? `<div class="grid">${make.map(pantryCard).join('')}</div>`
+    : '<p style="color:var(--muted)">선택한 재료만으로 완성되는 메뉴가 아직 없어요. 재료를 더 선택해보세요.</p>';
+  if(almost.length){
+    html+=`<h4 style="margin:16px 0 8px;color:#c9791f">🛍 딱 1개만 더 사면 되는 메뉴 (${almost.length})</h4>`;
+    html+=`<div class="grid">${almost.map(pantryCard).join('')}</div>`;
+  }
+  out.innerHTML=html;
+  out.querySelectorAll('.pantry-detail').forEach(b=>b.onclick=()=>renderDetailPanel('pantryDetail', +b.dataset.i));
+}
+function pantryPickWeek(pool){
+  const uniq=shuffle([...new Set(pool)]);
+  const week=[]; let k=0;
+  while(week.length<7 && uniq.length){
+    const cand=uniq[k%uniq.length];
+    if(week.length && cand===week[week.length-1] && uniq.length>1){ k++; if(k>200)break; continue; }
+    week.push(cand); k++;
+  }
+  return week;
+}
+document.getElementById('pantryFind').onclick=renderPantryResult;
+document.getElementById('pantryClear').onclick=()=>{
+  PANTRY_SEL.clear(); renderPantryChips();
+  document.getElementById('pantryResult').innerHTML='';
+  document.getElementById('pantryDetail').innerHTML='';
+};
+document.getElementById('pantryPlan').onclick=()=>{
+  const out=document.getElementById('pantryResult');
+  if(!PANTRY_SEL.size){ out.innerHTML='<p style="color:var(--muted)">먼저 가지고 있는 재료를 선택해주세요.</p>'; return; }
+  const m=pantryMatch();
+  const pool=m.filter(x=>x.miss.length===0).map(x=>x.idx);
+  if(!pool.length){ out.innerHTML='<p style="color:var(--muted)">선택한 재료만으로 완성되는 메뉴가 없어서 식단을 짤 수 없어요. 재료를 더 선택하거나, 아래 “딱 1개만 더 사면 되는 메뉴”를 참고해주세요.</p>'; renderPantryResult(); return; }
+  const uniq=[...new Set(pool)];
+  const week=pantryPickWeek(pool);
+  switchTab('plan');
+  const sels=[...document.querySelectorAll('#planGrid select')];
+  sels.forEach((s,i)=>{ s.value=String(week[i%week.length]); });
+  const idxs=sels.map(s=>+s.value);
+  renderNutri(idxs);
+  planDetailHint(uniq.length<7
+    ? `냉장고 재료로 만들 수 있는 메뉴가 ${uniq.length}개뿐이라, 한 주 동안 번갈아 반복되도록 짰어요. 재료를 더 선택하면 다양해져요.`
+    : '냉장고에 있는 재료만으로 짠 식단이에요.');
+  document.getElementById('planRun').click();
+};
+renderPantryChips();
 
 /* ---------- 매장별 장보기 렌더 ---------- */
 function renderStores(){
