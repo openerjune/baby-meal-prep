@@ -48,6 +48,13 @@
     font-size:.84rem;cursor:pointer;transition:.12s;font-weight:600}
   .ing-chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
   .miss{font-size:.72rem;color:#d24343;background:#fdeaea;padding:2px 8px;border-radius:999px;margin-left:4px;font-weight:600}
+  .allergy-bar{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:8px 12px;margin:12px 0 0;box-shadow:var(--shadow)}
+  .allergy-title{font-size:.82rem;font-weight:700;color:#d24343;white-space:nowrap}
+  .allergy-status{font-size:.74rem;color:var(--muted)}
+  .ing-chip.aller.on{background:#d24343;border-color:#d24343;color:#fff}
+  .mday.blocked{opacity:.5;position:relative}
+  .mday.blocked::after{content:"⚠";position:absolute;top:4px;right:6px;font-size:.8rem}
   .store-card{background:var(--card);border-radius:16px;padding:0;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden;margin-bottom:16px}
   .store-head{padding:14px 16px;color:#fff;display:flex;justify-content:space-between;align-items:center}
   .store-head h3{margin:0;font-size:1.1rem}
@@ -107,11 +114,17 @@
 </header>
 
 <div class="wrap">
+  <div class="allergy-bar">
+    <span class="allergy-title">🚫 알레르기 제외</span>
+    <div class="ing-chips" id="allergyChips" style="margin:0;gap:6px"></div>
+    <span class="allergy-status" id="allergyStatus"></span>
+  </div>
   <div class="tabs">
     <button class="tab active" data-tab="recipes">🍽 레시피 아이디어</button>
     <button class="tab" data-tab="pantry">🧺 냉장고 파먹기</button>
     <button class="tab" data-tab="plan">🗓️ 주간 식단</button>
     <button class="tab" data-tab="month">📅 월간 식단</button>
+    <button class="tab" data-tab="templates">📋 추천 식단표</button>
     <button class="tab" data-tab="trend">🔥 레시피 트렌드</button>
     <button class="tab" data-tab="calc">🧊 소분 계산기</button>
     <button class="tab" data-tab="live">🔄 실시간 검색</button>
@@ -324,6 +337,17 @@
       <div class="shop-out" id="monthShop"></div>
     </div>
   </section>
+
+  <!-- TEMPLATES (추천 식단표) -->
+  <section id="templates">
+    <div class="plan-box">
+      <h3 style="margin-top:0">📋 우리 아기 추천 식단표</h3>
+      <p style="color:var(--muted);font-size:.86rem;margin-top:4px">매주 뭘 해줄지 고민될 때, <b>영양 균형까지 맞춰 미리 짜둔 한 주 식단표</b>예요. 마음에 드는 걸 골라 요일을 눌러 조리법을 보거나, <b>“주간 식단에 불러오기”</b>로 장보기 목록까지 한 번에 정리하세요.</p>
+      <div id="templateList" style="margin-top:12px"></div>
+      <div id="templateDetail" style="margin-top:12px"></div>
+    </div>
+    <div class="note">💡 지금 있는 레시피로 짠 예시 식단표예요. 아기 월령·알레르기·기호에 맞게 요일을 바꿔 쓰셔도 좋아요. 새 레시피가 늘면 식단표도 더 다양해집니다.</div>
+  </section>
 </div>
 
 <footer>
@@ -480,6 +504,59 @@ document.querySelectorAll('.tab').forEach(b=>{
   };
 });
 
+/* ---------- 알레르기 제외 (전역) ---------- */
+const ALLERGENS=[
+  {key:"계란", label:"난류(계란)", kw:/계란|달걀|난백|난황/},
+  {key:"우유", label:"우유·유제품", kw:/우유|치즈|요거트|요구르트|버터|생크림|크림/},
+  {key:"대두", label:"대두(두부·콩)", kw:/두부|된장|간장|대두|콩/},
+  {key:"소고기", label:"쇠고기", kw:/소고기|쇠고기|사골/},
+  {key:"닭고기", label:"닭고기", kw:/닭/},
+  {key:"생선", label:"생선(연어·대구)", kw:/연어|대구|흰살생선|고등어|생선/},
+  {key:"새우", label:"새우·갑각류", kw:/새우|게|랍스터|가재/},
+];
+const AKEY='yuasik_allergy';
+let ALLERGY_SEL=new Set();
+try{ (JSON.parse(localStorage.getItem(AKEY))||[]).forEach(k=>ALLERGY_SEL.add(k)); }catch(e){}
+function allergensOf(r){
+  const text=r.t+' '+r.ing.map(i=>i[0]).join(' ');
+  const set=new Set();
+  ALLERGENS.forEach(a=>{ if(a.kw.test(text)) set.add(a.key); });
+  return set;
+}
+function recipeBlocked(r){
+  if(!ALLERGY_SEL.size) return false;
+  const has=allergensOf(r);
+  for(const k of ALLERGY_SEL) if(has.has(k)) return true;
+  return false;
+}
+function renderAllergyChips(){
+  const el=document.getElementById('allergyChips');
+  el.innerHTML=ALLERGENS.map(a=>
+    `<button class="ing-chip aller${ALLERGY_SEL.has(a.key)?' on':''}" data-a="${a.key}">${esc(a.label)}</button>`).join('');
+  el.querySelectorAll('.ing-chip').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.a;
+    if(ALLERGY_SEL.has(k))ALLERGY_SEL.delete(k); else ALLERGY_SEL.add(k);
+    b.classList.toggle('on');
+    localStorage.setItem(AKEY, JSON.stringify([...ALLERGY_SEL]));
+    applyAllergy();
+  });
+  updateAllergyStatus();
+}
+function updateAllergyStatus(){
+  const el=document.getElementById('allergyStatus'); if(!el)return;
+  const blocked=R.filter(recipeBlocked).length;
+  el.textContent = ALLERGY_SEL.size
+    ? `선택한 재료가 든 메뉴 ${blocked}개를 전체에서 숨겼어요.`
+    : '해당 재료가 든 메뉴를 앱 전체에서 자동으로 빼줘요.';
+}
+function applyAllergy(){
+  updateAllergyStatus();
+  renderRecipes();
+  if(typeof renderPantryChips==='function') renderPantryChips();
+  if(document.getElementById('pantryResult') && document.getElementById('pantryResult').innerHTML.trim()) renderPantryResult();
+  if(typeof renderTemplates==='function') renderTemplates();
+}
+
 /* ---------- 레시피 렌더 ---------- */
 let SHOW_STORE=false;
 const DIFF_CLS={"쉬움":"diff-e","보통":"diff-m","어려움":"diff-h"};
@@ -488,6 +565,7 @@ function renderRecipes(){
   const fs=fStore.value, fm=fMain.value, ft=fTime.value, fd=fDiff.value;
   const grid=document.getElementById('recipeGrid');
   const list=R.filter(r=>
+    !recipeBlocked(r) &&
     (!fs||r.stores.includes(fs)) &&
     (!fm||r.main===fm) &&
     (!ft||r.time<=+ft) &&
@@ -516,6 +594,7 @@ document.getElementById('toggleStore').onclick=()=>{
   renderRecipes();
 };
 renderRecipes();
+renderAllergyChips();
 
 /* ---------- 냉장고 파먹기 (가진 재료로 메뉴/식단 추천) ---------- */
 function switchTab(name){
@@ -538,7 +617,7 @@ function pKeys(raw){
 const PANTRY_SEL=new Set();
 function pantryIngredientList(){
   const set=new Set();
-  R.forEach(r=>r.ing.forEach(i=>{ if(pIsStaple(i[0]))return; pKeys(i[0]).forEach(k=>set.add(k)); }));
+  R.forEach(r=>{ if(recipeBlocked(r))return; r.ing.forEach(i=>{ if(pIsStaple(i[0]))return; pKeys(i[0]).forEach(k=>set.add(k)); }); });
   return [...set].sort((a,b)=>a.localeCompare(b,'ko'));
 }
 function renderPantryChips(){
@@ -553,10 +632,11 @@ function renderPantryChips(){
 }
 function pantryMatch(){
   return R.map((r,idx)=>{
+    if(recipeBlocked(r)) return null;
     const miss=new Set();
     r.ing.forEach(i=>{ if(pIsStaple(i[0]))return; pKeys(i[0]).forEach(k=>{ if(!PANTRY_SEL.has(k))miss.add(k); }); });
     return {idx, miss:[...miss]};
-  });
+  }).filter(Boolean);
 }
 function pantryCard(x){
   const r=R[x.idx];
@@ -753,8 +833,10 @@ function pickBalancedWeek(age, diffPref, globalUsed){
   let seq=cats.slice();
   for(let t=0;t<400;t++){ seq=shuffle(cats.slice()); // 같은 주재료가 연이틀 오지 않게
     let ok=true; for(let i=1;i<seq.length;i++) if(seq[i]===seq[i-1]){ok=false;break;} if(ok)break; }
+  const allow=R.map((r,i)=>({i,m:r.main,d:r.diff})).filter(x=>!recipeBlocked(R[x.i])); // 알레르기 제외
+  if(!allow.length) return []; // 모든 재료를 제외하면 짤 수 없음
   const byCat={};
-  Object.keys(target).forEach(c=>byCat[c]=shuffle(R.map((r,i)=>({i,m:r.main,d:r.diff})).filter(x=>x.m===c)));
+  Object.keys(target).forEach(c=>byCat[c]=shuffle(allow.filter(x=>x.m===c)));
   const used=new Set(), chosen=[];
   seq.forEach((cat,i)=>{
     const weekend = i>=5; // 토·일
@@ -765,7 +847,9 @@ function pickBalancedWeek(age, diffPref, globalUsed){
       if(dpool.length) pool=dpool;
     }
     if(!pool.length) pool=byCat[cat].filter(x=>!used.has(x.i)); // 주간 내 중복만 피하고 재사용 허용
-    if(!pool.length) pool=byCat[cat];            // 그래도 없으면 완전 재사용
+    if(!pool.length) pool=byCat[cat];                  // 그래도 없으면 카테고리 내 재사용
+    if(!pool.length) pool=allow.filter(x=>!used.has(x.i)); // 카테고리가 통째로 제외되면 다른 재료로 대체
+    if(!pool.length) pool=allow;                       // 최후: 전체 허용 목록에서 재사용
     const pick=pool[Math.floor(Math.random()*pool.length)];
     used.add(pick.i); if(globalUsed)globalUsed.add(pick.i); chosen.push(pick.i);
   });
@@ -786,6 +870,7 @@ function renderNutri(idxs){
 ['planAge','planDiffWeekday','planDiffWeekend'].forEach(id=>document.getElementById(id).addEventListener('change',()=>document.getElementById('planAuto').click()));
 document.getElementById('planAuto').onclick=()=>{
   const chosen=pickBalancedWeek();
+  if(!chosen.length){ document.getElementById('planNutri').innerHTML='<div class="note" style="color:#b23b3b">🚫 알레르기 제외가 너무 많아 짤 수 있는 메뉴가 없어요. 위 알레르기 바에서 몇 개를 풀어주세요.</div>'; return; }
   const sels=[...document.querySelectorAll('#planGrid select')];
   sels.forEach((s,i)=>{ s.value=String(chosen[i]); });
   renderNutri(chosen);
@@ -848,6 +933,7 @@ function renderMonthShop(weeks){
 }
 document.getElementById('monthAuto').onclick=()=>{
   const weeks=pickBalancedMonth();
+  if(weeks.some(w=>!w.length)){ document.getElementById('monthNutri').innerHTML='<div class="note" style="color:#b23b3b">🚫 알레르기 제외가 너무 많아 짤 수 있는 메뉴가 없어요. 위 알레르기 바에서 몇 개를 풀어주세요.</div>'; document.getElementById('monthGrid').innerHTML=''; document.getElementById('monthShop').innerHTML=''; return; }
   renderMonth(weeks); renderMonthNutri(weeks); renderMonthShop(weeks);
 };
 document.getElementById('monthClear').onclick=()=>{
@@ -857,6 +943,52 @@ document.getElementById('monthClear').onclick=()=>{
   document.getElementById('monthShop').innerHTML='';
 };
 ['monthAge','monthDiffWeekday','monthDiffWeekend'].forEach(id=>document.getElementById(id).addEventListener('change',()=>document.getElementById('monthAuto').click()));
+
+/* ---------- 추천 식단표 (직접 큐레이션한 주간 템플릿) ---------- */
+const TEMPLATES=[
+  {name:"표준 균형 주간", tag:"소2·닭2·생2·채1", desc:"4가지 주재료를 고르게 배치한 기본 균형 식단이에요. 뭘 고를지 모르겠으면 이걸로 시작하세요.",
+   days:["소고기 애호박 진밥","닭고기 채소 볶음밥","연어 브로콜리 진밥","두부 채소 계란찜","소고기 브로콜리 진밥","닭고기 크림 리조또(유아식)","흰살생선 채소죽"]},
+  {name:"고단백·철분 주간", tag:"소3·닭2·생1·채1", desc:"성장기 철분·단백질을 넉넉히. 소고기·닭고기를 늘려 든든하게 짰어요.",
+   days:["소고기 미역국 + 진밥","닭고기 감자 스프","소고기 가지 진밥","대구살 애호박 죽","소고기 시금치 진밥","닭고기 단호박 진밥","감자 당근 두부 매시"]},
+  {name:"생선·채소 듬뿍 주간", tag:"생3·채2·소1·닭1", desc:"오메가3와 채소를 넉넉히. 편식 예방과 다양한 맛 경험에 좋아요.",
+   days:["연어 감자 진밥","두부 애호박 볶음","대구살 감자 스프","소고기 뭇국 + 진밥","새우 애호박 볶음밥","시금치 두부무침 (반찬)","닭고기 브로콜리 죽"]},
+  {name:"간단·빠른 준비 주간", tag:"대부분 15분·쉬움", desc:"바쁜 한 주에. 조리가 쉽고 빠른 메뉴 위주로 짰어요.",
+   days:["소고기 애호박 진밥","닭고기 단호박 진밥","두부 애호박 볶음","소고기 브로콜리 진밥","두부 채소 계란찜","소고기 가지 진밥","감자 당근 두부 매시"]},
+];
+const TITLE2IDX={}; R.forEach((r,i)=>{ TITLE2IDX[r.t]=i; });
+function tplIdxs(tpl){ return tpl.days.map(t=>TITLE2IDX[t]).filter(i=>i!==undefined); }
+function renderTemplates(){
+  const el=document.getElementById('templateList');
+  el.innerHTML=TEMPLATES.map((tpl,ti)=>{
+    const idxs=tplIdxs(tpl);
+    const nBlocked=idxs.filter(idx=>recipeBlocked(R[idx])).length;
+    const days=idxs.map((idx,di)=>`<div class="day mday tpl-day${recipeBlocked(R[idx])?' blocked':''}" data-i="${idx}"><b>${DAYS[di]}</b><div class="mday-name">${DIFF_ICON[R[idx].diff]} ${esc(R[idx].t)}</div></div>`).join('');
+    const warn=nBlocked?`<span class="pill" style="background:#f8d7d7;color:#8a1f1f">⚠ 알레르기 ${nBlocked}일</span>`:'';
+    return `<div class="month-week">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+        <span class="mw-head" style="margin:0">${esc(tpl.name)}</span><span class="pill">${esc(tpl.tag)}</span>${warn}
+      </div>
+      <p style="color:var(--muted);font-size:.82rem;margin:2px 0 8px">${esc(tpl.desc)}</p>
+      <div class="plan-grid">${days}</div>
+      <div style="margin-top:8px"><button class="btn sec tpl-load" data-t="${ti}">🗓️ 주간 식단에 불러오기 (장보기까지)</button></div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.tpl-day').forEach(d=>d.onclick=()=>renderDetailPanel('templateDetail', +d.dataset.i));
+  el.querySelectorAll('.tpl-load').forEach(b=>b.onclick=()=>loadTemplate(+b.dataset.t));
+}
+function loadTemplate(ti){
+  const idxs=tplIdxs(TEMPLATES[ti]);
+  if(idxs.length<7){ document.getElementById('templateDetail').innerHTML='<div class="note">이 식단표를 불러오지 못했어요.</div>'; return; }
+  const blocked=idxs.map((idx,i)=>recipeBlocked(R[idx])?DAYS[i]:null).filter(Boolean);
+  switchTab('plan');
+  const sels=[...document.querySelectorAll('#planGrid select')];
+  sels.forEach((s,i)=>{ s.value=String(idxs[i]); });
+  renderNutri(idxs);
+  if(blocked.length){ planDetailHint(`추천 식단표를 불러왔어요. ⚠ ${blocked.join('·')}요일 메뉴에는 제외한 알레르기 재료가 들어있어요 — 다른 메뉴로 바꿔주세요.`); }
+  else{ planDetailHint('추천 식단표를 불러왔어요. 요일의 “조리법” 버튼으로 재료·조리법을 보고, 아래 장보기 목록도 확인하세요.'); }
+  document.getElementById('planRun').click();
+}
+renderTemplates();
 
 function matchPrice(name){
   // 담은 재료 중 이름이 서로 포함되는 항목의 가격을 찾음
