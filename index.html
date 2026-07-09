@@ -116,7 +116,7 @@
 </head>
 <body>
 <header>
-  <h1>🍚 마미늘보의 유아식 가이드</h1>
+  <h1>🦥 마미늘보의 유아식 가이드</h1>
   <p>완료기·유아식 (12개월+) · 무엇을 만들까 · 주간·월간 식단 · 균형 잡힌 식단표</p>
   <div class="brand-links">
     <a href="https://www.youtube.com/@maminulbo" target="_blank" rel="noopener noreferrer">🎥 유튜브</a>
@@ -217,7 +217,7 @@
     <div class="grid" id="trendGrid"><p style="color:var(--muted)">‘트렌드 불러오기’를 눌러보세요.</p></div>
     <div class="link-box">
       <h4 style="margin:0 0 6px">🔗 공식·추천 식단 바로가기</h4>
-      <p style="color:var(--muted);font-size:.8rem;margin:0 0 8px">아래 사이트는 검색어로 새 탭에서 바로 열려요. <b>육아종합지원센터·아이사랑</b>의 월별 식단은 대부분 PDF로 제공돼, 카드로 불러오지 않고 링크로 연결합니다.</p>
+      <p style="color:var(--muted);font-size:.8rem;margin:0 0 8px">레시피·검색 사이트는 검색어로 새 탭에서 열려요. <b>어린이급식관리지원센터</b>는 연령별(영아·유아) 월간 식단표·표준레시피로, <b>아이사랑</b>은 13~24개월 유아식·영양 안내로 바로 연결됩니다.</p>
       <div id="trendLinks" class="link-row"></div>
     </div>
     <div class="note">ℹ️ 외부 사이트 결과라 재료·난이도는 우리 앱 포맷과 다를 수 있어요. 아기 월령·알레르기에 맞는지 확인 후 참고하세요. 카드 불러오기는 로컬/배포 서버 실행이 필요합니다.</div>
@@ -362,7 +362,7 @@ const R = [
    steps:["연어는 가시·껍질 제거 후 잘게 으깬다","브로콜리·애호박을 데쳐 곱게 다진다","팬에 연어를 살짝 익힌다","진밥·물·채소를 넣고 끓여 완성"],
    keep:"소분 냉동 2주, 생선류는 완전 재가열"},
   {t:"두부 채소 계란찜", main:"채소·두부", time:15, diff:"쉬움", stores:["traders","costco"],
-   ing:[["두부 50g","costco"],["계란 1개","traders"],["애호박·당근 다짐 20g","gsfresh"],["물 or 무염 육수 60ml","traders"]],
+   ing:[["두부 50g","costco"],["계란 1개","traders"],["애호박·당근 다짐 20g","gsfresh"],["무염 육수 or 물 60ml","traders"]],
    steps:["두부는 으깨고 채소는 곱게 다진다","계란을 풀어 물·재료와 섞는다","내열 그릇에 담아 약불/찜기로 익힌다","속까지 완전히 익었는지 확인 후 제공"],
    keep:"당일 제공 권장"},
   {t:"소고기 미역국 + 진밥", main:"소고기", time:30, diff:"보통", stores:["traders"],
@@ -430,11 +430,11 @@ const R = [
    steps:["닭안심을 삶아 잘게 찢는다","단호박을 쪄서 으깬다","팬에 양파를 볶다 닭고기·단호박을 넣는다","진밥과 물을 넣고 부드럽게 끓여 완성"],
    keep:"소분 냉동 2주"},
   {t:"닭고기 브로콜리 죽", main:"닭고기", time:20, diff:"보통", stores:["costco","traders"],
-   ing:[["진밥 1공기","traders"],["닭안심(삶은 것) 50g","costco"],["브로콜리 30g","traders"],["당근 다짐 15g","gsfresh"],["무염 육수 200ml","traders"]],
+   ing:[["진밥 1공기","traders"],["닭안심(삶은 것) 50g","costco"],["브로콜리 30g","traders"],["당근 다짐 15g","gsfresh"],["무염 육수 or 물 200ml","traders"]],
    steps:["닭안심을 삶아 잘게 찢는다","브로콜리·당근을 데쳐 곱게 다진다","냄비에 육수·진밥을 넣고 끓인다","닭고기·채소를 넣고 죽처럼 눅진하게 끓여 완성"],
    keep:"소분 냉동 2주"},
   {t:"대구살 애호박 죽", main:"생선", time:20, diff:"보통", stores:["costco","traders"],
-   ing:[["진밥 1공기","traders"],["대구살 40g","costco"],["애호박 25g","gsfresh"],["당근 다짐 15g","gsfresh"],["무염 육수 200ml","traders"]],
+   ing:[["진밥 1공기","traders"],["대구살 40g","costco"],["애호박 25g","gsfresh"],["당근 다짐 15g","gsfresh"],["무염 육수 or 물 200ml","traders"]],
    steps:["대구살은 가시를 제거하고 잘게 으깬다","애호박·당근을 곱게 다진다","냄비에 육수·진밥을 넣고 끓인다","대구살·채소를 넣고 완전히 익혀 죽으로 완성"],
    keep:"소분 냉동 2주, 생선류는 완전 재가열"},
   {t:"연어 감자 진밥", main:"생선", time:20, diff:"보통", stores:["costco","traders"],
@@ -446,7 +446,7 @@ const R = [
    steps:["두부는 물기를 짠 뒤 깍둑 썬다","애호박·당근을 곱게 다진다","팬에 채소를 볶다 두부를 넣는다","약불에서 뭉근히 볶아 완성"],
    keep:"당일 제공 권장, 냉장 1일"},
   {t:"감자 당근 두부 매시", main:"채소·두부", time:15, diff:"쉬움", stores:["costco","gsfresh"],
-   ing:[["감자 50g","gsfresh"],["당근 20g","gsfresh"],["두부 40g","costco"],["물 or 무염 육수 60ml","traders"]],
+   ing:[["감자 50g","gsfresh"],["당근 20g","gsfresh"],["두부 40g","costco"],["무염 육수 or 물 60ml","traders"]],
    steps:["감자·당근을 쪄서 부드럽게 익힌다","두부는 데쳐 물기를 뺀다","모두 함께 곱게 으깬다","물이나 육수로 농도를 맞춰 완성"],
    keep:"당일 제공 권장"},
 ];
@@ -976,11 +976,11 @@ const TREND_LINKS=[
   {name:"🥣 우리의식탁", url:q=>`https://wtable.co.kr/search?query=${q}`},
   {name:"▶️ 유튜브", url:q=>`https://www.youtube.com/results?search_query=${q}`},
   {name:"🟢 네이버", url:q=>`https://search.naver.com/search.naver?query=${q}`},
-  {name:"🏛 중앙육아종합지원센터", url:_=>`https://central.childcare.go.kr`},
-  {name:"👶 아이사랑(임신육아포털)", url:_=>`https://www.childcare.go.kr`},
+  {name:"🏛 어린이급식관리지원센터 식단·레시피", url:_=>`https://dietary4u.mfds.go.kr/menu.es?mid=aq0205010000`},
+  {name:"👶 아이사랑 유아식·영양(13~24개월)", url:_=>`https://www.childcare.go.kr/?menuno=457`},
 ];
 function renderTrendLinks(){
-  const q=encodeURIComponent((document.getElementById('trendQ').value.trim()||'유아식')+' 유아식');
+  const q=encodeURIComponent(document.getElementById('trendQ').value.trim()||'유아식');
   document.getElementById('trendLinks').innerHTML=TREND_LINKS.map(l=>
     `<a href="${l.url(q)}" target="_blank" rel="noopener noreferrer">${l.name}</a>`).join('');
 }
