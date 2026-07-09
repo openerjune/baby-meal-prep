@@ -272,6 +272,13 @@
             <option value="어려움">어려움</option>
           </select>
         </label>
+        <label style="font-size:.82rem;color:var(--muted)">하루 집밥 끼니
+          <select id="planMeals">
+            <option value="1">1끼</option>
+            <option value="2" selected>2끼</option>
+            <option value="3">3끼</option>
+          </select>
+        </label>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
         <button class="btn" id="planAuto">🍀 균형 식단 자동 추천</button>
@@ -315,6 +322,13 @@
             <option value="쉬움">쉬움</option>
             <option value="보통">보통</option>
             <option value="어려움">어려움</option>
+          </select>
+        </label>
+        <label style="font-size:.82rem;color:var(--muted)">하루 집밥 끼니
+          <select id="monthMeals">
+            <option value="1">1끼</option>
+            <option value="2" selected>2끼</option>
+            <option value="3">3끼</option>
           </select>
         </label>
       </div>
@@ -778,6 +792,7 @@ function renderNutri(idxs){
 }
 // 옵션을 바꾸면 즉시 새 식단 생성
 ['planAge','planDiffWeekday','planDiffWeekend'].forEach(id=>document.getElementById(id).addEventListener('change',()=>document.getElementById('planAuto').click()));
+document.getElementById('planMeals').addEventListener('change',()=>{ if([...document.querySelectorAll('#planGrid select')].some(s=>s.value!=='')) document.getElementById('planRun').click(); });
 document.getElementById('planAuto').onclick=()=>{
   const chosen=pickBalancedWeek();
   if(!chosen.length){ document.getElementById('planNutri').innerHTML='<div class="note" style="color:#b23b3b">🚫 알레르기 제외가 너무 많아 짤 수 있는 메뉴가 없어요. 위 알레르기 바에서 몇 개를 풀어주세요.</div>'; return; }
@@ -829,30 +844,37 @@ function renderMonthNutri(weeks){
     </div>`;
 }
 function renderMonthShop(weeks){
+  const meals=+document.getElementById('monthMeals').value||1;
   const map={}; // name -> {store, count, amts}
   weeks.flat().forEach(idx=>{
     R[idx].ing.forEach(i=>{
+      if(pIsStaple(i[0]))return;
       const name=baseName(i[0]);
       if(!map[name]) map[name]={store:i[1], count:0, amts:[]};
-      map[name].count++; map[name].amts.push(amtOf(i[0]));
+      map[name].count+=meals;
+      for(let k=0;k<meals;k++) map[name].amts.push(amtOf(i[0]));
     });
   });
   const items=Object.entries(map).map(([name,v])=>({name, store:v.store, count:v.count, amts:v.amts}))
     .sort((a,b)=>b.count-a.count);
   renderShop(document.getElementById('monthShop'), items);
 }
+let MONTH_WEEKS=null;
 document.getElementById('monthAuto').onclick=()=>{
   const weeks=pickBalancedMonth();
   if(weeks.some(w=>!w.length)){ document.getElementById('monthNutri').innerHTML='<div class="note" style="color:#b23b3b">🚫 알레르기 제외가 너무 많아 짤 수 있는 메뉴가 없어요. 위 알레르기 바에서 몇 개를 풀어주세요.</div>'; document.getElementById('monthGrid').innerHTML=''; document.getElementById('monthShop').innerHTML=''; return; }
+  MONTH_WEEKS=weeks;
   renderMonth(weeks); renderMonthNutri(weeks); renderMonthShop(weeks);
 };
 document.getElementById('monthClear').onclick=()=>{
+  MONTH_WEEKS=null;
   document.getElementById('monthGrid').innerHTML='';
   document.getElementById('monthNutri').innerHTML='';
   document.getElementById('monthDetail').innerHTML='';
   document.getElementById('monthShop').innerHTML='';
 };
 ['monthAge','monthDiffWeekday','monthDiffWeekend'].forEach(id=>document.getElementById(id).addEventListener('change',()=>document.getElementById('monthAuto').click()));
+document.getElementById('monthMeals').addEventListener('change',()=>{ if(MONTH_WEEKS) renderMonthShop(MONTH_WEEKS); });
 
 /* ---------- 추천 식단표 (직접 큐레이션한 주간 템플릿) ---------- */
 const TEMPLATES=[
@@ -927,12 +949,15 @@ function renderShop(container, items){
 }
 document.getElementById('planRun').onclick=()=>{
   const sels=[...document.querySelectorAll('#planGrid select')];
+  const meals=+document.getElementById('planMeals').value||1;
   const map={}; let any=false;
   sels.forEach(s=>{ if(s.value!==''){ any=true;
     R[+s.value].ing.forEach(i=>{
+      if(pIsStaple(i[0]))return;
       const name=baseName(i[0]);
       if(!map[name]) map[name]={count:0, amts:[]};
-      map[name].count++; map[name].amts.push(amtOf(i[0]));
+      map[name].count+=meals;
+      for(let k=0;k<meals;k++) map[name].amts.push(amtOf(i[0]));
     });
   }});
   const items=Object.entries(map).map(([name,v])=>({name, count:v.count, amts:v.amts}));
