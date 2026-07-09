@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>우리 아기 유아식 가이드 (12개월+) · 주간·월간 식단 계획</title>
+<title>마미늘보의 유아식 가이드 (12개월+) · 주간·월간 식단 계획</title>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2685692811563574" crossorigin="anonymous"></script>
 <style>
   :root{
@@ -17,6 +17,9 @@
   header{padding:28px 20px 20px;text-align:center;background:linear-gradient(180deg,#fff2e8,transparent)}
   header h1{margin:0 0 6px;font-size:1.5rem}
   header p{margin:0;color:var(--muted);font-size:.9rem}
+  .brand-links{margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .brand-links a{font-size:.82rem;text-decoration:none;color:var(--accent);background:#fff;border:1px solid var(--line);border-radius:20px;padding:5px 14px;transition:.12s}
+  .brand-links a:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
   .wrap{max-width:960px;margin:0 auto;padding:0 16px 80px}
   .tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;position:sticky;top:0;z-index:20;
     background:var(--bg);padding:10px 0;border-bottom:1px solid var(--line)}
@@ -92,6 +95,10 @@
   .trend-card .tc-body{padding:10px 12px}
   .trend-card .tc-title{font-weight:600;font-size:.92rem;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .trend-card .tc-author{color:var(--muted);font-size:.75rem;margin-top:4px}
+  .link-box{margin-top:14px;background:#fffdfb;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  .link-row{display:flex;gap:8px;flex-wrap:wrap}
+  .link-row a{font-size:.82rem;text-decoration:none;color:var(--accent);background:#fff;border:1px solid var(--line);border-radius:20px;padding:6px 14px;transition:.12s}
+  .link-row a:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
   .chip-btn{border:1px solid var(--line);background:#fff;color:#b5613a;border-radius:999px;padding:5px 12px;font-size:.8rem;cursor:pointer}
   .chip-btn:hover{background:var(--chip)}
   .shop-out{margin-top:16px}
@@ -109,8 +116,12 @@
 </head>
 <body>
 <header>
-  <h1>🍚 우리 아기 유아식 가이드</h1>
-  <p>완료기·유아식 (12개월+) · 무엇을 만들까 · 주간·월간 식단 · 균형 잡힌 경제 장보기</p>
+  <h1>🍚 마미늘보의 유아식 가이드</h1>
+  <p>완료기·유아식 (12개월+) · 무엇을 만들까 · 주간·월간 식단 · 균형 잡힌 식단표</p>
+  <div class="brand-links">
+    <a href="https://www.youtube.com/@maminulbo" target="_blank" rel="noopener noreferrer">🎥 유튜브</a>
+    <a href="https://www.instagram.com/maminulbo/" target="_blank" rel="noopener noreferrer">📷 인스타그램</a>
+  </div>
 </header>
 
 <div class="wrap">
@@ -127,21 +138,11 @@
     <button class="tab" data-tab="templates">📋 추천 식단표</button>
     <button class="tab" data-tab="trend">🔥 레시피 트렌드</button>
     <button class="tab" data-tab="calc">🧊 소분 계산기</button>
-    <button class="tab" data-tab="live">🔄 실시간 검색</button>
-    <button class="tab" data-tab="stores">🛒 매장별 장보기</button>
   </div>
 
   <!-- RECIPES -->
   <section id="recipes" class="active">
     <div class="filters">
-      <label>매장
-        <select id="fStore">
-          <option value="">전체</option>
-          <option value="costco">코스트코</option>
-          <option value="traders">트레이더스</option>
-          <option value="gsfresh">GS프레쉬</option>
-        </select>
-      </label>
       <label>주재료
         <select id="fMain">
           <option value="">전체</option>
@@ -167,7 +168,6 @@
           <option value="어려움">어려움</option>
         </select>
       </label>
-      <button class="chip-btn" id="toggleStore" style="margin-left:auto">🏬 매장 표시하기</button>
     </div>
     <div class="grid" id="recipeGrid"></div>
   </section>
@@ -189,66 +189,51 @@
     <div class="note">💡 재료 이름이 <b>1개만 더</b> 필요한 메뉴도 함께 보여줘요. 장 보러 갈 때 딱 하나만 더 사면 되는 메뉴예요.</div>
   </section>
 
-  <!-- STORES -->
-  <section id="stores">
-    <p style="color:var(--muted);font-size:.88rem">매장별로 <b>대용량으로 사서 소분·냉동하면 좋은</b> 재료를 정리했어요. 가격은 <b>참고용 예시</b>이며 시즌·행사에 따라 달라집니다.</p>
-    <div id="storeList"></div>
-    <div class="note">💡 <b>가격 업데이트 팁</b> — 이 파일은 텍스트로 되어 있어, 실제 구매 후 <code>STORES</code> 데이터의 가격을 직접 고쳐 두면 우리 집 전용 장보기 표가 됩니다.</div>
-  </section>
-
-  <!-- LIVE -->
-  <section id="live">
-    <div class="note" id="serverWarn" style="display:none;background:#fff0f0;border-color:#ffd0d0;color:#b23b3b">
-      ⚠️ 로컬 서버에 연결되지 않았어요. 이 페이지는 <b>python3 유아식-서버.py</b>로 켠 뒤
-      <b>http://localhost:8770</b> 로 열어야 실시간 검색이 됩니다. (HTML 파일을 직접 더블클릭하면 동작하지 않아요)
-    </div>
-    <div class="calc-box">
-      <h3 style="margin-top:0">🔎 재료 실시간 가격 검색</h3>
-      <p style="color:var(--muted);font-size:.86rem;margin-top:4px">검색어를 넣고 각 매장의 <b>새로고침</b> 버튼을 누르면 그때그때 조회해요.</p>
-      <div class="calc-row">
-        <div class="fld" style="flex:1;min-width:200px"><label>검색어</label><input type="text" id="liveQ" value="소고기" placeholder="예: 소고기, 두부, 연어"></div>
-        <button class="btn sec" id="liveAll">🔄 전체 매장 새로고침</button>
-      </div>
-    </div>
-    <div id="liveStores"></div>
-    <div class="basket-panel" id="basketPanel">
-      <h4 style="margin:0 0 6px">🧺 담은 재료 가격 <span style="font-weight:400;color:var(--muted);font-size:.78rem">(소분 계산기·식단표 비용에 사용돼요)</span></h4>
-      <div id="basketList"></div>
-    </div>
-    <div class="note">ℹ️ 매장 사정(로그인·봇차단·구조변경)에 따라 조회가 막힐 수 있어요. 조회되는 곳은 실제 판매가, 막히는 곳은 안내 메시지가 표시됩니다. 가격은 배송지·회원등급에 따라 다를 수 있어요. 담은 가격은 브라우저에 저장됩니다.</div>
-  </section>
-
   <!-- TREND -->
   <section id="trend">
+    <div class="note" id="serverWarn" style="display:none;background:#fff0f0;border-color:#ffd0d0;color:#b23b3b"></div>
     <div class="calc-box">
       <h3 style="margin-top:0">🔥 지금 인기 있는 유아식 레시피</h3>
-      <p style="color:var(--muted);font-size:.86rem;margin-top:4px">만개의레시피 인기순을 그때그때 불러와요. 카드를 누르면 원문 레시피가 새 탭에서 열립니다.</p>
-      <div class="filters" style="margin:8px 0 0">
-        <input type="text" id="trendQ" value="유아식 반찬" placeholder="예: 유아식 반찬, 12개월 유아식, 아기 국" style="flex:1;min-width:200px">
+      <p style="color:var(--muted);font-size:.86rem;margin-top:4px">여러 사이트에서 인기 레시피를 그때그때 불러와요. 카드를 누르면 원문 레시피가 새 탭에서 열립니다.</p>
+      <div class="filters" style="margin:8px 0 0;align-items:center">
+        <label style="font-size:.82rem;color:var(--muted)">출처
+          <select id="trendSrc">
+            <option value="recipe10000">만개의레시피</option>
+            <option value="wtable">우리의식탁</option>
+          </select>
+        </label>
+        <label style="font-size:.82rem;color:var(--muted)" id="trendOrderWrap">정렬
+          <select id="trendOrder">
+            <option value="reco">인기순</option>
+            <option value="date">최신순</option>
+            <option value="accuracy">정확도순</option>
+          </select>
+        </label>
+        <input type="text" id="trendQ" value="유아식 반찬" placeholder="예: 유아식 반찬, 12개월 유아식, 아기 국" style="flex:1;min-width:180px">
         <button class="btn" id="trendRun">🔄 트렌드 불러오기</button>
       </div>
       <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap" id="trendChips"></div>
     </div>
     <div class="grid" id="trendGrid"><p style="color:var(--muted)">‘트렌드 불러오기’를 눌러보세요.</p></div>
-    <div class="note">ℹ️ 외부 사이트(만개의레시피) 결과라 재료·난이도는 우리 앱 포맷과 다를 수 있어요. 아기 월령·알레르기에 맞는지 확인 후 참고하세요. 로컬 서버 실행이 필요합니다.</div>
+    <div class="link-box">
+      <h4 style="margin:0 0 6px">🔗 공식·추천 식단 바로가기</h4>
+      <p style="color:var(--muted);font-size:.8rem;margin:0 0 8px">아래 사이트는 검색어로 새 탭에서 바로 열려요. <b>육아종합지원센터·아이사랑</b>의 월별 식단은 대부분 PDF로 제공돼, 카드로 불러오지 않고 링크로 연결합니다.</p>
+      <div id="trendLinks" class="link-row"></div>
+    </div>
+    <div class="note">ℹ️ 외부 사이트 결과라 재료·난이도는 우리 앱 포맷과 다를 수 있어요. 아기 월령·알레르기에 맞는지 확인 후 참고하세요. 카드 불러오기는 로컬/배포 서버 실행이 필요합니다.</div>
   </section>
 
   <!-- CALC -->
   <section id="calc">
     <div class="calc-box">
       <h3 style="margin-top:0">🧊 대용량 → 몇 회분 소분?</h3>
-      <p style="color:var(--muted);font-size:.86rem;margin-top:4px">코스트코 대용량 팩을 사서 아기 한 끼 분량으로 나눌 때, 몇 회분이 나오고 얼마나 냉동 보관할 수 있는지 계산해요.</p>
+      <p style="color:var(--muted);font-size:.86rem;margin-top:4px">대용량 팩을 사서 아기 한 끼 분량으로 나눌 때, 몇 회분이 나오고 얼마나 냉동 보관할 수 있는지 계산해요.</p>
       <div class="calc-row">
         <div class="fld"><label>대용량 총량 (g)</label><input type="number" id="cTotal" value="1000" min="1"></div>
         <div class="fld"><label>1회분 (g)</label><input type="number" id="cUnit" value="60" min="1"></div>
         <div class="fld"><label>하루 사용 횟수</label><input type="number" id="cPerDay" value="2" min="1"></div>
         <div class="fld"><label>구매가 (원, 선택)</label><input type="number" id="cPrice" placeholder="예: 18000" min="0"></div>
         <button class="btn" id="cRun">계산하기</button>
-      </div>
-      <div class="calc-row" style="margin-top:8px">
-        <div class="fld" style="flex:1;min-width:200px"><label>담은 재료에서 가격 불러오기</label>
-          <select id="cPick"><option value="">— 실시간 검색 탭에서 담은 항목 —</option></select>
-        </div>
       </div>
       <div class="result" id="cResult"></div>
     </div>
@@ -266,6 +251,9 @@
             <option value="12">12개월</option>
             <option value="15" selected>15개월</option>
             <option value="18">18개월</option>
+            <option value="24">24개월</option>
+            <option value="30">30개월</option>
+            <option value="36">36개월(만 3세)</option>
           </select>
         </label>
         <label style="font-size:.82rem;color:var(--muted)">평일 난이도
@@ -308,6 +296,9 @@
             <option value="12">12개월</option>
             <option value="15" selected>15개월</option>
             <option value="18">18개월</option>
+            <option value="24">24개월</option>
+            <option value="30">30개월</option>
+            <option value="36">36개월(만 3세)</option>
           </select>
         </label>
         <label style="font-size:.82rem;color:var(--muted)">평일 난이도
@@ -356,37 +347,6 @@
 </footer>
 
 <script>
-/* ---------- 매장별 대용량 재료 데이터 (가격은 참고용 예시) ---------- */
-const STORES = {
-  costco:{name:"코스트코", label:"대용량·냉동·유제품 강점", cls:"s-costco",
-    items:[
-      {name:"호주산/국산 소고기 다짐육", pack:"약 1kg 팩", price:"₩18,000~24,000", tip:"60~80g씩 소분 냉동. 진밥·국·볶음밥 두루 사용"},
-      {name:"닭안심/닭가슴살", pack:"약 2kg", price:"₩13,000~17,000", tip:"삶아서 잘게 찢어 1회분 냉동. 볶음밥·리조또용"},
-      {name:"생연어 필렛", pack:"약 1kg", price:"₩30,000 내외", tip:"가시 제거 후 40~50g 소분 냉동. 오메가3 풍부"},
-      {name:"유기농 냉동 채소믹스", pack:"약 1kg", price:"₩8,000~11,000", tip:"바로 데쳐 사용, 손질 시간 절약"},
-      {name:"냉동 블루베리", pack:"약 1.3kg", price:"₩13,000 내외", tip:"간식·매시용, 소량씩 해동"},
-      {name:"아기치즈/체다 슬라이스", pack:"대용량 묶음", price:"₩9,000~13,000", tip:"밥·죽에 반 장씩. 무염/저염 확인"},
-      {name:"유기농 두부", pack:"멀티팩", price:"₩5,000~7,000", tip:"계란찜·부침·매시에. 개봉 후 빨리 소진"},
-    ]},
-  traders:{name:"트레이더스", label:"국산 정육·계란·쌀·육수 강점", cls:"s-traders",
-    items:[
-      {name:"국산 소고기 국거리/불고기감", pack:"대용량 트레이", price:"₩20,000~28,000", tip:"미역국·뭇국·진밥. 기름 적은 부위 선택"},
-      {name:"무항생제 계란 (대란 30구)", pack:"30구", price:"₩7,000~9,000", tip:"계란찜·부침. 완전히 익혀 제공"},
-      {name:"국산 백미/유기농 쌀", pack:"10~20kg", price:"₩30,000~55,000", tip:"진밥·무른밥 주식. 소분 밀폐 보관"},
-      {name:"사골/소고기 육수", pack:"멀티팩", price:"₩8,000~12,000", tip:"무염 국·죽 베이스. 나트륨 표기 확인"},
-      {name:"단호박·애호박·브로콜리 묶음", pack:"대용량", price:"₩5,000~9,000", tip:"데쳐서 매시·큐브 냉동"},
-      {name:"국산 냉동 새우살", pack:"약 500g~1kg", price:"₩12,000~18,000", tip:"잘게 다져 볶음밥·죽. 첫 도입 시 관찰"},
-    ]},
-  gsfresh:{name:"GS프레쉬(더프레시)", label:"신선·소량·새벽배송 강점", cls:"s-gsfresh",
-    items:[
-      {name:"국산 채소 소포장 (애호박·당근·양파)", pack:"소량 신선", price:"₩1,500~3,500", tip:"대용량이 부담될 때 딱 필요한 만큼"},
-      {name:"국산 정육 소분 (다짐육·안심)", pack:"200~300g", price:"₩6,000~9,000", tip:"1~2회분만 필요할 때 바로 사용"},
-      {name:"제철 과일 (바나나·사과·배)", pack:"소량", price:"₩3,000~6,000", tip:"간식 매시·퓨레. 새벽배송으로 신선"},
-      {name:"손질 생선 (흰살생선·대구살)", pack:"소포장", price:"₩5,000~9,000", tip:"가시 적은 흰살로 스프·죽"},
-      {name:"두부·유아 요거트 소포장", pack:"소량", price:"₩2,000~4,500", tip:"바로 먹을 만큼만, 신선하게"},
-    ]},
-};
-
 /* ---------- 유아식 레시피 데이터 (12개월+) ---------- */
 const R = [
   {t:"소고기 애호박 진밥", main:"소고기", time:15, diff:"쉬움", stores:["traders","costco"],
@@ -491,9 +451,6 @@ const R = [
    keep:"당일 제공 권장"},
 ];
 
-const STORE_NAMES={costco:"코스트코",traders:"트레이더스",gsfresh:"GS프레쉬"};
-const STORE_CLS={costco:"s-costco",traders:"s-traders",gsfresh:"s-gsfresh"};
-
 /* ---------- 탭 전환 ---------- */
 document.querySelectorAll('.tab').forEach(b=>{
   b.onclick=()=>{
@@ -558,15 +515,13 @@ function applyAllergy(){
 }
 
 /* ---------- 레시피 렌더 ---------- */
-let SHOW_STORE=false;
 const DIFF_CLS={"쉬움":"diff-e","보통":"diff-m","어려움":"diff-h"};
 const DIFF_ICON={"쉬움":"🟢","보통":"🟡","어려움":"🔴"};
 function renderRecipes(){
-  const fs=fStore.value, fm=fMain.value, ft=fTime.value, fd=fDiff.value;
+  const fm=fMain.value, ft=fTime.value, fd=fDiff.value;
   const grid=document.getElementById('recipeGrid');
   const list=R.filter(r=>
     !recipeBlocked(r) &&
-    (!fs||r.stores.includes(fs)) &&
     (!fm||r.main===fm) &&
     (!ft||r.time<=+ft) &&
     (!fd||r.diff===fd));
@@ -577,22 +532,16 @@ function renderRecipes(){
         <span class="pill ${DIFF_CLS[r.diff]}">${DIFF_ICON[r.diff]} ${r.diff}</span>
         <span class="pill">${r.main}</span>
         <span class="pill time">⏱ ${r.time}분</span>
-        ${SHOW_STORE?r.stores.map(s=>`<span class="pill store ${STORE_CLS[s]}">${STORE_NAMES[s]}</span>`).join(''):''}
       </div>
       <h4>재료</h4>
-      <ul>${r.ing.map(i=>`<li>${i[0]}${SHOW_STORE?`<span class="ing-store ${STORE_CLS[i[1]]}">${STORE_NAMES[i[1]]}</span>`:''}</li>`).join('')}</ul>
+      <ul>${r.ing.map(i=>`<li>${i[0]}</li>`).join('')}</ul>
       <h4>조리법</h4>
       <ol>${r.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
       <h4>보관</h4>
       <ul><li>${r.keep}</li></ul>
     </div>`).join('') : '<p style="color:var(--muted)">조건에 맞는 레시피가 없어요.</p>';
 }
-[fStore,fMain,fTime,fDiff].forEach(el=>el.onchange=renderRecipes);
-document.getElementById('toggleStore').onclick=()=>{
-  SHOW_STORE=!SHOW_STORE;
-  document.getElementById('toggleStore').textContent = SHOW_STORE? '🏬 매장 숨기기' : '🏬 매장 표시하기';
-  renderRecipes();
-};
+[fMain,fTime,fDiff].forEach(el=>el.onchange=renderRecipes);
 renderRecipes();
 renderAllergyChips();
 
@@ -698,52 +647,7 @@ document.getElementById('pantryPlan').onclick=()=>{
 };
 renderPantryChips();
 
-/* ---------- 매장별 장보기 렌더 ---------- */
-function renderStores(){
-  const el=document.getElementById('storeList');
-  el.innerHTML=Object.entries(STORES).map(([k,s])=>`
-    <div class="store-card">
-      <div class="store-head ${s.cls}"><h3>${s.name}</h3><span>${s.label}</span></div>
-      <div class="store-body">
-        <table>
-          <tr><th>재료</th><th>구성</th><th>참고가</th><th>활용 팁</th></tr>
-          ${s.items.map(i=>`<tr><td><b>${i.name}</b></td><td>${i.pack}</td><td class="price">${i.price}</td><td>${i.tip}</td></tr>`).join('')}
-        </table>
-      </div>
-    </div>`).join('');
-}
-renderStores();
-
-/* ---------- 담은 재료 가격 장바구니 (공용) ---------- */
-const BKEY='yuasik_basket';
-let BASKET=[];
-try{ BASKET=JSON.parse(localStorage.getItem(BKEY))||[]; }catch(e){ BASKET=[]; }
-const wonNum=s=>{const n=parseInt(String(s).replace(/[^\d]/g,''),10);return isNaN(n)?0:n;};
 const wonFmt=n=>n.toLocaleString('ko-KR')+'원';
-function saveBasket(){ localStorage.setItem(BKEY, JSON.stringify(BASKET)); }
-function addToBasket(item){
-  BASKET.unshift({name:item.name, price:wonNum(item.price), store:item.store, ts:Date.now()});
-  BASKET=BASKET.slice(0,30); saveBasket(); renderBasket(); refreshPickers();
-}
-function removeFromBasket(ts){ BASKET=BASKET.filter(b=>b.ts!==ts); saveBasket(); renderBasket(); refreshPickers(); }
-function renderBasket(){
-  const el=document.getElementById('basketList'); if(!el)return;
-  el.innerHTML = BASKET.length? BASKET.map(b=>`
-    <div class="basket-item">
-      <span>${esc(b.name)} <span style="color:var(--muted);font-size:.75rem">· ${STORE_NAMES2[b.store]||b.store}</span></span>
-      <span><b style="color:#b5613a">${wonFmt(b.price)}</b> <button class="rm" onclick="removeFromBasket(${b.ts})">삭제</button></span>
-    </div>`).join('') : '<div style="color:var(--muted);font-size:.82rem">아직 담은 재료가 없어요. 검색 결과에서 “＋담기”를 눌러보세요.</div>';
-}
-const STORE_NAMES2={kurly:"컬리",ssg:"이마트몰",coupang:"쿠팡",gsfresh:"GS프레쉬"};
-function refreshPickers(){
-  const opts='<option value="">— 담은 항목에서 선택 —</option>'+
-    BASKET.map((b,i)=>`<option value="${i}">${esc(b.name.slice(0,24))} · ${wonFmt(b.price)}</option>`).join('');
-  const cp=document.getElementById('cPick'); if(cp)cp.innerHTML=opts;
-}
-document.getElementById('cPick').onchange=e=>{
-  const b=BASKET[+e.target.value]; if(b){ document.getElementById('cPrice').value=b.price; }
-};
-renderBasket(); refreshPickers();
 
 /* ---------- 소분 계산기 (비용 포함) ---------- */
 document.getElementById('cRun').onclick=()=>{
@@ -809,11 +713,17 @@ const AGE_TARGETS={
   "12":{"소고기":3,"채소·두부":2,"닭고기":1,"생선":1},
   "15":{"소고기":2,"닭고기":2,"생선":2,"채소·두부":1},
   "18":{"소고기":2,"생선":2,"채소·두부":2,"닭고기":1},
+  "24":{"소고기":2,"닭고기":1,"생선":2,"채소·두부":2},
+  "30":{"소고기":2,"닭고기":2,"생선":1,"채소·두부":2},
+  "36":{"소고기":1,"닭고기":2,"생선":2,"채소·두부":2},
 };
 const AGE_NOTE={
   "12":"철분(소고기)과 부드러운 식물성을 넉넉히 배치했어요.",
   "15":"4가지 주재료를 고르게 배치한 표준 균형이에요.",
   "18":"다양한 반찬성 재료(생선·채소)를 늘려 편식 예방에 좋아요.",
+  "24":"돌 지난 뒤 다양한 식재료를 고루 경험하도록 균형 있게 배치했어요.",
+  "30":"가족식에 가까워지는 시기, 단백질과 채소를 골고루 배치했어요.",
+  "36":"만 3세 전후, 채소·생선을 넉넉히 넣어 편식 예방에 신경 썼어요.",
 };
 function readDiffPref(prefix){
   const wd=document.getElementById(prefix+'DiffWeekday'), we=document.getElementById(prefix+'DiffWeekend');
@@ -929,7 +839,7 @@ function renderMonthShop(weeks){
   });
   const items=Object.entries(map).map(([name,v])=>({name, store:v.store, count:v.count, amts:v.amts}))
     .sort((a,b)=>b.count-a.count);
-  renderShop(document.getElementById('monthShop'), items, "한 달 예상 장보기 비용");
+  renderShop(document.getElementById('monthShop'), items);
 }
 document.getElementById('monthAuto').onclick=()=>{
   const weeks=pickBalancedMonth();
@@ -990,17 +900,7 @@ function loadTemplate(ti){
 }
 renderTemplates();
 
-function matchPrice(name){
-  // 담은 재료 중 이름이 서로 포함되는 항목의 가격을 찾음
-  let best=null;
-  for(const b of BASKET){
-    if(b.name.includes(name) || name.includes(b.name.replace(/\[.*?\]/g,'').trim().split(' ')[0])){
-      if(!best || b.price<best.price) best=b; // 같은 재료면 저렴한 쪽
-    }
-  }
-  return best;
-}
-/* ---------- 공용 장보기 리스트 (전체 목록 ↔ 마트별 추천 토글) ---------- */
+/* ---------- 공용 장보기 리스트 ---------- */
 function baseName(raw){ return raw.replace(/\s?\d+.*$/,'').trim()||raw; }
 function amtOf(raw){ const b=raw.replace(/\s?\d+.*$/,'').trim(); return (b && raw.length>b.length)? raw.slice(b.length).trim() : ''; }
 function sumAmounts(list){
@@ -1015,46 +915,15 @@ function sumAmounts(list){
   const parts=Object.entries(units).map(([u,v])=>{ const n=Number.isInteger(v)? v : Math.round(v*10)/10; return n+u; });
   return parts.concat([...new Set(others)]).join(' + ');
 }
-function shopItemLi(it, showStore){
-  const m=matchPrice(it.name);
+function shopItemLi(it){
   const cnt = it.count? ` <span style="color:var(--muted);font-size:.72rem">×${it.count}끼</span>`:'';
   const total = sumAmounts(it.amts);
   const amt = total? ` <span style="color:var(--accent-2);font-size:.72rem">필요량 ${esc(total)}</span>`:'';
-  const store = showStore? ` <span style="color:var(--muted);font-size:.72rem">(${STORE_NAMES[it.store]})</span>`:'';
-  const price = m? ` <b style="color:#b5613a">${wonFmt(m.price)}</b>` : ` <span style="color:var(--muted);font-size:.72rem">가격 미등록</span>`;
-  return `<li>${esc(it.name)}${cnt}${amt}${price}${store}</li>`;
+  return `<li>${esc(it.name)}${cnt}${amt}</li>`;
 }
-function shopCostBox(items, label){
-  let grand=0, matched=0;
-  items.forEach(it=>{ const m=matchPrice(it.name); if(m){grand+=m.price;matched++;} });
-  return matched? `<div class="result show" style="margin-top:12px">
-      💰 ${label}(담은 항목 기준): <b>${wonFmt(grand)}</b>
-      <span style="color:var(--muted);font-size:.8rem">· ${matched}/${items.length}개 재료 가격 반영</span><br>
-      <span style="font-size:.78rem;color:var(--muted)">실시간 검색 탭에서 재료를 더 담을수록 정확해져요.</span>
-    </div>` : `<div class="note">💡 실시간 검색 탭에서 재료를 “담기”하면 여기에 예상 비용이 계산돼요.</div>`;
-}
-function shopCombinedHTML(items, label){
-  const rows=items.map(it=>shopItemLi(it,true)).join('');
-  return `<div class="shop-store"><h4 style="background:var(--accent)">🧾 전체 재료 (${items.length}개)</h4><ul>${rows}</ul></div>`+shopCostBox(items,label);
-}
-function shopByStoreHTML(items, label){
-  const groups={costco:[],traders:[],gsfresh:[]};
-  items.forEach(it=>{ (groups[it.store]||(groups[it.store]=[])).push(it); });
-  const blocks=Object.entries(groups).filter(([k,v])=>v.length).map(([k,v])=>
-    `<div class="shop-store"><h4 class="${STORE_CLS[k]}">${STORE_NAMES[k]}</h4><ul>${v.map(it=>shopItemLi(it,false)).join('')}</ul></div>`
-  ).join('');
-  return blocks+shopCostBox(items,label);
-}
-function renderShop(container, items, label){
-  label = label || "예상 장보기 비용";
-  container.innerHTML=`<div style="margin:10px 0"><button class="btn sec shop-toggle">🏬 마트별 추천</button></div><div class="shop-body">${shopCombinedHTML(items,label)}</div>`;
-  let byStore=false;
-  const btn=container.querySelector('.shop-toggle');
-  btn.onclick=()=>{
-    byStore=!byStore;
-    container.querySelector('.shop-body').innerHTML = byStore? shopByStoreHTML(items,label) : shopCombinedHTML(items,label);
-    btn.textContent = byStore? '🧾 전체 목록 보기' : '🏬 마트별 추천';
-  };
+function renderShop(container, items){
+  const rows=items.map(shopItemLi).join('');
+  container.innerHTML=`<div class="shop-store"><h4 style="background:var(--accent)">🧾 필요한 재료 (${items.length}개)</h4><ul>${rows}</ul></div>`;
 }
 document.getElementById('planRun').onclick=()=>{
   const sels=[...document.querySelectorAll('#planGrid select')];
@@ -1062,51 +931,24 @@ document.getElementById('planRun').onclick=()=>{
   sels.forEach(s=>{ if(s.value!==''){ any=true;
     R[+s.value].ing.forEach(i=>{
       const name=baseName(i[0]);
-      if(!map[name]) map[name]={store:i[1], count:0, amts:[]};
+      if(!map[name]) map[name]={count:0, amts:[]};
       map[name].count++; map[name].amts.push(amtOf(i[0]));
     });
   }});
-  const items=Object.entries(map).map(([name,v])=>({name, store:v.store, count:v.count, amts:v.amts}));
+  const items=Object.entries(map).map(([name,v])=>({name, count:v.count, amts:v.amts}));
   const out=document.getElementById('shopOut');
   if(!any){out.innerHTML='<p style="color:var(--muted)">메뉴를 하나 이상 선택해주세요.</p>';return;}
-  renderShop(out, items, "예상 장보기 비용");
+  renderShop(out, items);
 };
 
-/* ---------- 실시간 검색 (로컬 서버 필요) ---------- */
-const LIVE=[
-  {key:"kurly",   name:"컬리",        cls:"s-gsfresh", tone:"#5f3dc4"},
-  {key:"ssg",     name:"이마트몰(SSG)", cls:"s-traders", tone:"#2a9d8f"},
-  {key:"coupang", name:"쿠팡",        cls:"s-costco",  tone:"#e63946"},
-  {key:"gsfresh", name:"GS프레쉬",     cls:"s-gsfresh", tone:"#3a86ff"},
-];
-function renderLive(){
-  document.getElementById('liveStores').innerHTML=LIVE.map(s=>`
-    <div class="store-card">
-      <div class="store-head" style="background:${s.tone}">
-        <h3>${s.name}</h3>
-        <button class="btn" style="background:rgba(255,255,255,.22);padding:7px 14px" data-live="${s.key}">🔄 새로고침</button>
-      </div>
-      <div class="store-body"><div id="live-${s.key}" style="font-size:.88rem;color:var(--muted)">새로고침을 눌러 조회하세요.</div></div>
-    </div>`).join('');
-  document.querySelectorAll('[data-live]').forEach(b=>b.onclick=()=>fetchStore(b.dataset.live,b));
-}
-renderLive();
-
-document.getElementById('liveAll').onclick=async(e)=>{
-  const btn=e.currentTarget, old=btn.textContent;
-  btn.textContent='전체 조회 중…'; btn.disabled=true;
-  const btns=[...document.querySelectorAll('[data-live]')];
-  await Promise.all(btns.map(b=>fetchStore(b.dataset.live,b)));
-  btn.textContent=old; btn.disabled=false;
-};
-
+/* ---------- 스크래퍼 서버 감지 (레시피 트렌드에서 사용) ---------- */
 let SERVER_OK=false;
-const STANDALONE_MSG='📴 실시간 조회·트렌드는 스크래퍼 서버가 있어야 동작해요.\n지금은 서버 없이 열려 있어, 레시피·난이도·소분 계산기·주간/월간 식단·장보기는 모두 그대로 사용할 수 있어요.';
+const STANDALONE_MSG='📴 레시피 트렌드는 스크래퍼 서버가 있어야 동작해요.\n지금은 서버 없이 열려 있어, 레시피·난이도·소분 계산기·주간/월간 식단·추천 식단표·장보기는 모두 그대로 사용할 수 있어요.';
 function updateServerBanner(){
   const sw=document.getElementById('serverWarn'); if(!sw) return;
   if(SERVER_OK){ sw.style.display='none'; return; }
   sw.style.display='block'; sw.style.whiteSpace='pre-line';
-  sw.innerHTML='📴 <b>서버 없이 열린 상태</b>예요. 실시간 검색·레시피 트렌드만 스크래퍼 서버가 필요하고, 레시피·계산기·식단표·장보기는 그대로 쓸 수 있어요.';
+  sw.innerHTML='📴 <b>서버 없이 열린 상태</b>예요. 레시피 트렌드만 스크래퍼 서버가 필요하고, 나머지 기능은 그대로 쓸 수 있어요.';
 }
 async function detectServer(){
   try{ const r=await fetch('/api/ping',{cache:'no-store'}); const d=await r.json(); SERVER_OK=!!(d&&d.ok); }
@@ -1114,55 +956,47 @@ async function detectServer(){
   updateServerBanner();
 }
 window.addEventListener('DOMContentLoaded',detectServer);
-async function fetchStore(store, btn){
-  const box=document.getElementById('live-'+store);
-  if(!SERVER_OK){ box.style.whiteSpace='pre-line'; box.innerHTML=`<span style="color:#b5613a">${esc(STANDALONE_MSG)}</span>`; return; }
-  const q=document.getElementById('liveQ').value.trim();
-  if(!q){box.textContent='검색어를 입력해주세요.';return;}
-  const old=btn.textContent; btn.textContent='조회 중…'; btn.disabled=true;
-  box.textContent='조회 중…';
-  try{
-    const r=await fetch(`/api/scrape?store=${store}&q=${encodeURIComponent(q)}`);
-    const d=await r.json();
-    SERVER_OK=true; document.getElementById('serverWarn').style.display='none';
-    if(d.ok && d.items && d.items.length){
-      box.innerHTML=`<table><tr><th>상품</th><th>가격</th><th>단가</th><th></th></tr>`+
-        d.items.map((i,idx)=>`<tr>
-          <td>${i.soldout?'🚫 ':''}${esc(i.name)}</td>
-          <td class="price">${esc(i.price||'-')}${i.orig?` <s style="color:#bba;font-weight:400">${esc(i.orig)}</s>`:''}</td>
-          <td style="color:var(--muted);font-size:.8rem">${esc(i.unit||'')}</td>
-          <td><button class="btn mini add-basket" data-name="${esc(i.name)}" data-price="${esc(i.price||'')}" data-store="${store}">＋담기</button></td>
-        </tr>`).join('')+`</table>
-        <div style="font-size:.75rem;color:var(--muted);margin-top:6px">조회 시각 ${new Date().toLocaleTimeString('ko-KR')}</div>`;
-      box.querySelectorAll('.add-basket').forEach(b=>b.onclick=()=>{
-        addToBasket({name:b.dataset.name, price:b.dataset.price, store:b.dataset.store});
-        b.textContent='담김 ✓'; b.disabled=true;
-      });
-    }else{
-      box.innerHTML=`<div style="white-space:pre-line;color:#b5613a">${esc(d.note||'조회 결과가 없어요.')}</div>`;
-    }
-  }catch(e){
-    SERVER_OK=false; updateServerBanner();
-    box.style.whiteSpace='pre-line'; box.innerHTML=`<span style="color:#b5613a">${esc(STANDALONE_MSG)}</span>`;
-  }finally{ btn.textContent=old; btn.disabled=false; }
-}
 function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
 
-/* ---------- 레시피 트렌드 (로컬 서버 필요) ---------- */
+/* ---------- 레시피 트렌드 (여러 출처, 서버 필요) ---------- */
 const TREND_CHIPS=["유아식 반찬","12개월 유아식","아기 국","유아식 소고기","아기 반찬","유아식 간식"];
 document.getElementById('trendChips').innerHTML=TREND_CHIPS.map(c=>`<button class="chip-btn" data-chip="${esc(c)}">${esc(c)}</button>`).join('');
-document.querySelectorAll('[data-chip]').forEach(b=>b.onclick=()=>{document.getElementById('trendQ').value=b.dataset.chip;loadTrends();});
+document.querySelectorAll('[data-chip]').forEach(b=>b.onclick=()=>{document.getElementById('trendQ').value=b.dataset.chip;renderTrendLinks();loadTrends();});
 document.getElementById('trendRun').onclick=loadTrends;
+document.getElementById('trendQ').addEventListener('input',renderTrendLinks);
+// 우리의식탁은 키워드 검색이 아니라 사이트 인기 레시피를 보여줘서 정렬 옵션을 숨긴다
+document.getElementById('trendSrc').onchange=()=>{
+  const isRecipe=document.getElementById('trendSrc').value==='recipe10000';
+  document.getElementById('trendOrderWrap').style.display=isRecipe?'':'none';
+};
+
+/* 검색어로 새 탭에서 바로 열리는 외부 출처 링크 */
+const TREND_LINKS=[
+  {name:"🍳 만개의레시피", url:q=>`https://www.10000recipe.com/recipe/list.html?q=${q}`},
+  {name:"🥣 우리의식탁", url:q=>`https://wtable.co.kr/search?query=${q}`},
+  {name:"▶️ 유튜브", url:q=>`https://www.youtube.com/results?search_query=${q}`},
+  {name:"🟢 네이버", url:q=>`https://search.naver.com/search.naver?query=${q}`},
+  {name:"🏛 중앙육아종합지원센터", url:_=>`https://central.childcare.go.kr`},
+  {name:"👶 아이사랑(임신육아포털)", url:_=>`https://www.childcare.go.kr`},
+];
+function renderTrendLinks(){
+  const q=encodeURIComponent((document.getElementById('trendQ').value.trim()||'유아식')+' 유아식');
+  document.getElementById('trendLinks').innerHTML=TREND_LINKS.map(l=>
+    `<a href="${l.url(q)}" target="_blank" rel="noopener noreferrer">${l.name}</a>`).join('');
+}
+renderTrendLinks();
 
 async function loadTrends(){
   const grid=document.getElementById('trendGrid');
   if(!SERVER_OK){ grid.style.whiteSpace='pre-line'; grid.innerHTML=`<p style="color:#b5613a;white-space:pre-line">${esc(STANDALONE_MSG)}</p>`; return; }
   const q=document.getElementById('trendQ').value.trim()||'유아식';
+  const src=document.getElementById('trendSrc').value;
+  const order=document.getElementById('trendOrder').value;
   const btn=document.getElementById('trendRun'), old=btn.textContent;
   btn.textContent='불러오는 중…'; btn.disabled=true;
   grid.innerHTML='<p style="color:var(--muted)">불러오는 중…</p>';
   try{
-    const r=await fetch(`/api/trends?q=${encodeURIComponent(q)}`);
+    const r=await fetch(`/api/trends?q=${encodeURIComponent(q)}&src=${encodeURIComponent(src)}&order=${encodeURIComponent(order)}`);
     const d=await r.json();
     SERVER_OK=true; updateServerBanner();
     if(d.ok && d.items && d.items.length){
@@ -1171,7 +1005,7 @@ async function loadTrends(){
           ${i.img?`<img src="${esc(i.img)}" loading="lazy" alt="">`:''}
           <div class="tc-body">
             <div class="tc-title">${esc(i.title)}</div>
-            ${i.author?`<div class="tc-author">by ${esc(i.author)}</div>`:''}
+            ${i.author?`<div class="tc-author">${src==='wtable'?'':'by '}${esc(i.author)}</div>`:''}
           </div>
         </a>`).join('');
     }else{
