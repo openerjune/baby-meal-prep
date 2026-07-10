@@ -14,7 +14,7 @@
   *{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
     background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
-  header{padding:28px 20px 20px;text-align:center;background:linear-gradient(180deg,#fff2e8,transparent)}
+  header{padding:28px 20px 18px;text-align:center;border-bottom:1px solid var(--line)}
   header h1{margin:0 0 6px;font-size:1.5rem}
   header p{margin:0;color:var(--muted);font-size:.9rem}
   .brand-links{margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
@@ -131,13 +131,13 @@
     <span class="allergy-status" id="allergyStatus"></span>
   </div>
   <div class="tabs">
-    <button class="tab active" data-tab="recipes">🍽 레시피 아이디어</button>
-    <button class="tab" data-tab="pantry">🧺 냉장고 파먹기</button>
-    <button class="tab" data-tab="plan">🗓️ 주간 식단</button>
-    <button class="tab" data-tab="month">📅 월간 식단</button>
-    <button class="tab" data-tab="templates">📋 추천 식단표</button>
-    <button class="tab" data-tab="trend">🔥 레시피 트렌드</button>
-    <button class="tab" data-tab="calc">🧊 소분 계산기</button>
+    <button class="tab active" data-tab="recipes">레시피 아이디어</button>
+    <button class="tab" data-tab="pantry">냉장고 파먹기</button>
+    <button class="tab" data-tab="plan">주간 식단</button>
+    <button class="tab" data-tab="month">월간 식단</button>
+    <button class="tab" data-tab="templates">추천 식단표</button>
+    <button class="tab" data-tab="trend">레시피 트렌드</button>
+    <button class="tab" data-tab="calc">소분 계산기</button>
   </div>
 
   <!-- RECIPES -->
@@ -175,7 +175,7 @@
   <!-- PANTRY (냉장고 파먹기) -->
   <section id="pantry">
     <div class="plan-box">
-      <h3 style="margin-top:0">🧺 냉장고에 있는 재료로 만들기</h3>
+      <h3 style="margin-top:0">냉장고에 있는 재료로 만들기</h3>
       <p style="color:var(--muted);font-size:.86rem;margin-top:4px">지금 <b>가지고 있는 재료</b>를 눌러서 선택하면, 그 재료로 만들 수 있는 메뉴를 골라줘요. <span style="color:var(--accent-2)">물·밥·육수·기름·전분</span> 같은 기본 재료는 항상 있다고 가정해요.</p>
       <div class="ing-chips" id="pantryChips"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px">
@@ -193,7 +193,7 @@
   <section id="trend">
     <div class="note" id="serverWarn" style="display:none;background:#fff0f0;border-color:#ffd0d0;color:#b23b3b"></div>
     <div class="calc-box">
-      <h3 style="margin-top:0">🔥 지금 인기 있는 유아식 레시피</h3>
+      <h3 style="margin-top:0">지금 인기 있는 유아식 레시피</h3>
       <p style="color:var(--muted);font-size:.86rem;margin-top:4px">여러 사이트에서 인기 레시피를 그때그때 불러와요. 카드를 누르면 원문 레시피가 새 탭에서 열립니다.</p>
       <div class="filters" style="margin:8px 0 0;align-items:center">
         <label style="font-size:.82rem;color:var(--muted)">출처
@@ -226,7 +226,7 @@
   <!-- CALC -->
   <section id="calc">
     <div class="calc-box">
-      <h3 style="margin-top:0">🧊 대용량 → 몇 회분 소분?</h3>
+      <h3 style="margin-top:0">대용량 → 몇 회분 소분?</h3>
       <p style="color:var(--muted);font-size:.86rem;margin-top:4px">대용량 팩을 사서 아기 한 끼 분량으로 나눌 때, 몇 회분이 나오고 얼마나 냉동 보관할 수 있는지 계산해요.</p>
       <div class="calc-row">
         <div class="fld"><label>대용량 총량 (g)</label><input type="number" id="cTotal" value="1000" min="1"></div>
@@ -243,7 +243,7 @@
   <!-- PLAN -->
   <section id="plan">
     <div class="plan-box">
-      <h3 style="margin-top:0">🗓️ 이번 주 식단 & 장보기</h3>
+      <h3 style="margin-top:0">이번 주 식단 & 장보기</h3>
       <p style="color:var(--muted);font-size:.86rem;margin-top:4px">직접 골라도 되고, <b>균형 식단 자동 추천</b>을 누르면 영양이 골고루 배치된 한 주 식단이 자동으로 채워져요.</p>
       <div class="calc-row" style="margin-bottom:10px;align-items:center;gap:16px">
         <label style="font-size:.82rem;color:var(--muted)">월령
@@ -295,7 +295,7 @@
   <!-- MONTH -->
   <section id="month">
     <div class="plan-box">
-      <h3 style="margin-top:0">📅 한 달 식단 & 통합 장보기</h3>
+      <h3 style="margin-top:0">한 달 식단 & 통합 장보기</h3>
       <p style="color:var(--muted);font-size:.86rem;margin-top:4px"><b>월간 자동 편성</b>을 누르면 4주(28끼) 식단이 영양 균형에 맞게 짜이고, 한 달 장보기 목록과 예상 비용이 한 번에 정리돼요. 같은 메뉴가 몰리지 않게 주마다 다양하게 배치합니다.</p>
       <div class="calc-row" style="margin-bottom:10px;align-items:center;gap:16px">
         <label style="font-size:.82rem;color:var(--muted)">월령
@@ -346,7 +346,7 @@
   <!-- TEMPLATES (추천 식단표) -->
   <section id="templates">
     <div class="plan-box">
-      <h3 style="margin-top:0">📋 우리 아기 추천 식단표</h3>
+      <h3 style="margin-top:0">우리 아기 추천 식단표</h3>
       <p style="color:var(--muted);font-size:.86rem;margin-top:4px">매주 뭘 해줄지 고민될 때, <b>영양 균형까지 맞춰 미리 짜둔 한 주 식단표</b>예요. 마음에 드는 걸 골라 요일을 눌러 조리법을 보거나, <b>“주간 식단에 불러오기”</b>로 장보기 목록까지 한 번에 정리하세요.</p>
       <div id="templateList" style="margin-top:12px"></div>
       <div id="templateDetail" style="margin-top:12px"></div>
@@ -355,10 +355,6 @@
   </section>
 </div>
 
-<footer>
-  참고용 가이드입니다 · 새로운 재료는 3일 원칙(한 가지씩 3일 관찰)으로 도입하고, 알레르기·건강 관련은 소아과 상담을 우선하세요.<br>
-  가격은 예시이며 매장·시즌에 따라 변동됩니다.
-</footer>
 
 <script>
 /* ---------- 유아식 레시피 데이터 (12개월+) ---------- */
@@ -477,13 +473,13 @@ document.querySelectorAll('.tab').forEach(b=>{
 
 /* ---------- 알레르기 제외 (전역) ---------- */
 const ALLERGENS=[
-  {key:"계란", label:"난류(계란)", kw:/계란|달걀|난백|난황/},
-  {key:"우유", label:"우유·유제품", kw:/우유|치즈|요거트|요구르트|버터|생크림|크림/},
-  {key:"대두", label:"대두(두부·콩)", kw:/두부|된장|간장|대두|콩/},
-  {key:"소고기", label:"쇠고기", kw:/소고기|쇠고기|사골/},
-  {key:"닭고기", label:"닭고기", kw:/닭/},
-  {key:"생선", label:"생선(연어·대구)", kw:/연어|대구|흰살생선|고등어|생선/},
-  {key:"새우", label:"새우·갑각류", kw:/새우|게|랍스터|가재/},
+  {key:"계란", label:"계란", kw:/계란|달걀|난백|난황/},
+  {key:"우유", label:"유제품", kw:/우유|치즈|요거트|요구르트|버터|생크림|크림/},
+  {key:"대두", label:"콩", kw:/두부|된장|간장|대두|콩/},
+  {key:"소고기", label:"소", kw:/소고기|쇠고기|사골/},
+  {key:"닭고기", label:"닭", kw:/닭/},
+  {key:"생선", label:"생선", kw:/연어|대구|흰살생선|고등어|생선/},
+  {key:"새우", label:"갑각류", kw:/새우|게|랍스터|가재/},
 ];
 const AKEY='yuasik_allergy';
 let ALLERGY_SEL=new Set();
@@ -1000,7 +996,6 @@ const TREND_LINKS=[
   {name:"🍳 만개의레시피", url:q=>`https://www.10000recipe.com/recipe/list.html?q=${q}`},
   {name:"🥣 우리의식탁", url:q=>`https://wtable.co.kr/search?query=${q}`},
   {name:"▶️ 유튜브", url:q=>`https://www.youtube.com/results?search_query=${q}`},
-  {name:"🟢 네이버", url:q=>`https://search.naver.com/search.naver?query=${q}`},
   {name:"🏛 어린이급식관리지원센터 식단·레시피", url:_=>`https://dietary4u.mfds.go.kr/menu.es?mid=aq0205010000`},
   {name:"👶 아이사랑 유아식·영양(13~24개월)", url:_=>`https://www.childcare.go.kr/?menuno=457`},
 ];
@@ -1027,7 +1022,7 @@ async function loadTrends(){
     if(d.ok && d.items && d.items.length){
       grid.innerHTML=d.items.map(i=>`
         <a class="trend-card" href="${esc(i.url)}" target="_blank" rel="noopener noreferrer">
-          ${i.img?`<img src="${esc(i.img)}" loading="lazy" alt="">`:''}
+          ${i.img?`<img src="${esc(i.img)}" loading="lazy" referrerpolicy="no-referrer" alt="">`:''}
           <div class="tc-body">
             <div class="tc-title">${esc(i.title)}</div>
             ${i.author?`<div class="tc-author">${src==='wtable'?'':'by '}${esc(i.author)}</div>`:''}
